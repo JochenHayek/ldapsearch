@@ -1,6 +1,6 @@
 :
 
-# $ env ldap_password='...' ~/bin/ldapsearch.wrapper-___.sh > ~/transfer/ldap.$( date '+%Y%m%d%H%M%S' ).txt
+# $ env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh > ~/transfer/ldap.$( date '+%Y%m%d%H%M%S' ).txt
 
 env \
   \
