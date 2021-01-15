@@ -1,7 +1,7 @@
 :
 
-# $ env ... ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch.sh
-# $ env ... ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch.sh >  ~/transfer/ldap.$( date '+%Y%m%d%H%M%S' ).txt
+# $ env ldap_password='...' ldapuri='...' ldap_binddn='...' ldap_searchbase='...' ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch.sh
+# $ env ldap_password='...' ldapuri='...' ldap_binddn='...' ldap_searchbase='...' ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch.sh >  ~/transfer/ldap.$( date '+%Y%m%d%H%M%S' ).txt
 
 #       -W     Prompt for simple authentication.  This is used instead of specifying the password on the command line.
 #
