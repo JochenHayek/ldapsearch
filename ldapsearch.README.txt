@@ -1,0 +1,16 @@
+# …
+
+* ARCHIVE/Computers/Software/Internet/Clients/LDAP/
+
+* https://github.com/JochenHayek/ldapsearch
+
+* get-domain-accounts.pl
+
+$ date=$( date '+%Y%m%d%H%M%S' )
+$ env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ~/transfer/ldap.${date}.txt
+$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ~/transfer/ldap.${date}.txt | (echo 'l,department,sn,givenName,mail,telephoneNumbertitle,title' ; sort) > ~/transfer/ldap.${date}.sorted.txt
+$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ~/transfer/ldap.${date}.txt | fgrep Berlin | (echo 'l,department,sn,givenName,mail,telephoneNumbertitle,title' ; sort) > ~/transfer/ldap.${date}.sorted.txt
+
+$ (echo 'l,department,sn,givenName,mail,telephoneNumbertitle,title' ; egrep '"(Anwendungsentwicklung|DevOps|IT)"' ~/transfer/ldap.${date}.sorted.txt) >  ~/transfer/ldap.${date}.sorted.entire_IT.txt
+
+$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl ldap.txt | sort > ldap.sorted.csv 
