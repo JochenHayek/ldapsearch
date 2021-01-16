@@ -40,13 +40,15 @@
 	{
 	  if( defined($record{sn}) || defined($record{givenName}) || defined($record{mail}) )
 	    {
+	      # l,department,sn,givenName,mail,telephoneNumbertitle,title
+
 	      printf "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
 		defined($record{l})  	          ? $record{l}  : '' ,
+		defined($record{department}) 	  ? $record{department}      : '' ,
 		defined($record{sn})         	  ? $record{sn}         : '' ,
 		defined($record{givenName})  	  ? $record{givenName}  : '' ,
 		defined($record{mail})       	  ? $record{mail}       : '' ,
 		defined($record{telephoneNumber}) ? $record{telephoneNumber} : '' ,
-		defined($record{department}) 	  ? $record{department}      : '' ,
 		defined($record{title})      	  ? $record{title}           : ''
 		;
 	    }
