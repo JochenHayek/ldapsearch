@@ -4,13 +4,35 @@
 
 * https://github.com/JochenHayek/ldapsearch
 
-* get-domain-accounts.pl
+* remember get-domain-accounts.pl ?!?
+
+================================================================================
 
 $ date=$( date '+%Y%m%d%H%M%S' )
-$ env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ~/transfer/ldap.${date}.txt
-$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ~/transfer/ldap.${date}.txt |                (echo 'l,department,sn,givenName,mail,telephoneNumbertitle,title' ; sort) > ~/transfer/ldap.${date}.sorted.txt
-$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ~/transfer/ldap.${date}.txt | fgrep Berlin | (echo 'l,department,sn,givenName,mail,telephoneNumbertitle,title' ; sort) > ~/transfer/ldap.${date}.sorted.txt
+$ dir=$HOME/transfer
+$ env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ${dir}/ldap.${date}.txt
 
-$ (echo 'l,department,sn,givenName,mail,telephoneNumbertitle,title' ; egrep '"(Anwendungsentwicklung|DevOps|IT)"' ~/transfer/ldap.${date}.sorted.txt) >  ~/transfer/ldap.${date}.sorted.entire_IT.txt
+$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ${dir}/ldap.${date}.txt | (echo 'l,department,sn,givenName,mail,telephoneNumber,mobile,title' ; sort) > ${dir}/ldap.${date}.csv
 
-$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl ldap.txt | sort > ldap.sorted.csv 
+================================================================================
+
+# column names (should be as above):
+#
+$ csvcut --names ${dir}/ldap.${date}.csv
+
+================================================================================
+
+# which departments do we have:
+$ csvcut --columns department ${dir}/ldap.${date}.csv | csvsort --columns department | uniq | csvlook > ${dir}/ldap.${date}.departments.csv
+…
+
+================================================================================
+
+# only …:
+$ csvgrep --columns department --regex '(dept_A|dept_B|dept_C)' ${dir}/ldap.${date}.csv) > ${dir}/ldap.${date}.entire_IT.csv
+
+# only misspelt "dept_ZZZ":
+$ csvgrep --columns department --regex '(dept_ZZZ$)' ${dir}/ldap.${date}.csv | csvcut --columns sn,givenName,mail | csvlook > ${dir}/ldap.${date}.Zahlstell.csv
+| sn    | givenName | mail                |
+| ----- | --------- | ------------------- |
+| Short | Julia     | j.short@federalx.eu |
