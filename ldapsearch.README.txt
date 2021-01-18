@@ -26,16 +26,16 @@ $ csvcut --names ${dir}/ldap.${date}.csv
 ================================================================================
 
 # which departments do we have:
-$ csvcut --columns department ${dir}/ldap.${date}.csv | csvsort --columns department | uniq | csvlook > ${dir}/ldap.${date}.departments.csv
+$ csvcut --columns department ${dir}/ldap.${date}.csv | csvsort --columns department | uniq | csvlook | tee ${dir}/ldap.${date}.departments.csv
 …
 
 ================================================================================
 
 # only …:
-$ csvgrep --columns department --regex '(dept_A|dept_B|dept_C)' ${dir}/ldap.${date}.csv) > ${dir}/ldap.${date}.entire_IT.csv
+$ csvgrep --columns department --regex '(dept_A|dept_B|dept_C)' ${dir}/ldap.${date}.csv | tee ${dir}/ldap.${date}.entire_IT.csv
 
 # only misspelt "dept_ZZZ":
-$ csvgrep --columns department --regex '(dept_ZZZ$)' ${dir}/ldap.${date}.csv | csvcut --columns sn,givenName,mail | csvlook > ${dir}/ldap.${date}.Zahlstell.csv
+$ csvgrep --columns department --regex '(dept_ZZZ$)' ${dir}/ldap.${date}.csv | csvcut --columns sn,givenName,mail | csvlook | tee ${dir}/ldap.${date}.dept_ZZZ.csv
 | sn    | givenName | mail                |
 | ----- | --------- | ------------------- |
 | Short | Julia     | j.short@federalx.eu |
