@@ -11,6 +11,7 @@
   $positive_list{givenName} = 1;
   $positive_list{l} = 1;
   $positive_list{mail} = 1;
+  $positive_list{mobile} = 1;
   $positive_list{postalCode} = 1;
   $positive_list{sn} = 1;
   $positive_list{streetAddress} = 1;
@@ -42,13 +43,14 @@
 	    {
 	      # l,department,sn,givenName,mail,telephoneNumbertitle,title
 
-	      printf "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
-		defined($record{l})  	          ? $record{l}  : '' ,
+	      printf "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
+		defined($record{l})  	          ? $record{l}               : '' ,
 		defined($record{department}) 	  ? $record{department}      : '' ,
-		defined($record{sn})         	  ? $record{sn}         : '' ,
-		defined($record{givenName})  	  ? $record{givenName}  : '' ,
-		defined($record{mail})       	  ? $record{mail}       : '' ,
+		defined($record{sn})         	  ? $record{sn}              : '' ,
+		defined($record{givenName})  	  ? $record{givenName}       : '' ,
+		defined($record{mail})       	  ? $record{mail}            : '' ,
 		defined($record{telephoneNumber}) ? $record{telephoneNumber} : '' ,
+		defined($record{mobile})          ? $record{mobile}          : '' ,
 		defined($record{title})      	  ? $record{title}           : ''
 		;
 	    }
