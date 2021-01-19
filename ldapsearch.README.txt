@@ -15,7 +15,7 @@ $ dir=$HOME/transfer
 $ ldap_password=...
 $ env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ${dir}/ldap.${date}.txt
 
-$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ${dir}/ldap.${date}.txt | (echo 'l,department,sn,givenName,mail,telephoneNumber,mobile,title' ; sort) > ${dir}/ldap.${date}.csv
+$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ${dir}/ldap.${date}.txt | (echo 'l,department,sn,givenName,initials,mail,telephoneNumber,mobile,title' ; sort) > ${dir}/ldap.${date}.csv
 
 ================================================================================
 
