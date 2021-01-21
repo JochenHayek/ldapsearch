@@ -11,7 +11,7 @@
 ================================================================================
 
 $ date=$( date '+%Y%m%d%H%M%S' )
-$ dir=$HOME/transfer/ldap
+$ dir=$HOME/etc/addresses
 $ ldap_password=...
 $ env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ${dir}/ldap.${date}.txt
 
