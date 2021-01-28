@@ -44,10 +44,13 @@
 	      || defined($record{mail}) || defined($record{telephoneNumber}) || defined($record{mobile}) || defined($record{title}) 
 	    )
 	    {
+	      my($any_of_them_is_defined_p) = 0;
 	      my($output_line) = '';
 	      my($separator) = '';
 	      foreach my $field ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title')
 		{
+		  $any_of_them_is_defined_p ||= defined($record{$field});
+
 		  $output_line .=
 		    sprintf "%s\"%s\"",
 		      $separator,
@@ -56,7 +59,8 @@
 		  $separator = ',';
 		}
 	      $output_line .= "\n";
-	      print $output_line;
+	      print $output_line 
+		if $any_of_them_is_defined_p;
 	    }
 
 	  print
