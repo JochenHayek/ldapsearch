@@ -40,28 +40,25 @@
 	}
       elsif(m/ ^ \s*$ /x)
 	{
-	  if(    defined($record{l}) || defined($record{department}) || defined($record{sn}) || defined($record{givenName}) || defined($record{initials})
-	      || defined($record{mail}) || defined($record{telephoneNumber}) || defined($record{mobile}) || defined($record{title}) 
-	    )
-	    {
-	      my($any_of_them_is_defined_p) = 0;
-	      my($output_line) = '';
-	      my($separator) = '';
-	      foreach my $field ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title')
-		{
-		  $any_of_them_is_defined_p ||= defined($record{$field});
+	  my($any_of_them_is_defined_p) = 0;
+	  my($output_line) = '';
+	  my($separator) = '';
 
-		  $output_line .=
-		    sprintf "%s\"%s\"",
-		      $separator,
-		      defined($record{$field}) ? $record{$field} : ''
-		      ;
-		  $separator = ',';
-		}
-	      $output_line .= "\n";
-	      print $output_line 
-		if $any_of_them_is_defined_p;
+	  foreach my $field ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title')
+	    {
+	      $any_of_them_is_defined_p ||= defined($record{$field});
+
+	      $output_line .=
+		sprintf "%s\"%s\"",
+		  $separator,
+		  defined($record{$field}) ? $record{$field} : ''
+		  ;
+	      $separator = ',';
 	    }
+
+	  $output_line .= "\n";
+	  print $output_line 
+	    if $any_of_them_is_defined_p;
 
 	  print
 	    if $show_original_records_p;
