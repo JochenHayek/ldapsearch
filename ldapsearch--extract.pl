@@ -1,33 +1,37 @@
 #! /usr/bin/perl -w
 
 {
-  my(%positive_list);
-
-  $positive_list{cn} = 1;
-  $positive_list{company} = 1;
-  $positive_list{c} = 1;
-  $positive_list{department} = 1;
-  $positive_list{description} = 1;
-  $positive_list{givenName} = 1;
-  $positive_list{initials} = 1;
-  $positive_list{l} = 1;
-  $positive_list{mail} = 1;
-  $positive_list{mobile} = 1;
-  $positive_list{postalCode} = 1;
-  $positive_list{sn} = 1;
-  $positive_list{streetAddress} = 1;
-  $positive_list{st} = 1;
-  $positive_list{telephoneNumber} = 1;
-  $positive_list{title} = 1;
-
-  ################################################################################
-
   my($show_p) = 0;
   my(%record);
 
   my($show_original_records_p) = 0;
 
-  my(@field_names) = ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title');
+  my(@field_names) = 
+
+##,'cn'
+##,'company'
+##,'c'
+##,'description'
+##,'postalCode'
+##,'streetAddress'
+##,'st'
+
+  ('l'
+  ,'department'
+  ,'sn'
+  ,'givenName'
+  ,'initials'
+  ,'mail'
+  ,'telephoneNumber'
+  ,'mobile'
+  ,'title'
+  );
+
+  my(%positive_list);
+  foreach my $field (@field_names)
+    {
+      $positive_list{$field} = 1;
+    }
 
   print join(',',@field_names) , "\n";
 
@@ -72,17 +76,14 @@
 	}
       elsif($show_p)
 	{
-	  if(m/ ^ (?<lhs> [^:]+ ) : \s* (?<rhs>.*?) ( \s+ \/\/ \s+ .* )? $ /x)
+	  if(    m/ ^ (?<lhs> [^:]+ ) : \s* (?<rhs>.*?) ( \s+ \/\/ \s+ .* )? $ /x
+	      && exists($positive_list{$+{lhs}})
+	    )
 	    { 
-	      my(%plus) = %+;
+	      print		# w/o decoding
+		if $show_original_records_p;
 
-	      if(exists($positive_list{$plus{lhs}}))
-		{
-		  print		# w/o decoding
-		    if $show_original_records_p;
-
-		  $record{ $plus{lhs} } = $plus{rhs};
-		}
+	      $record{ $+{lhs} } = $+{rhs};
 	    }
 	}
     }
