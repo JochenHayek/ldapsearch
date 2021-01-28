@@ -29,8 +29,7 @@
 
   my(@field_names) = ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title');
 
-  # TBD:
-  # print field names now!
+  print join(',',@field_names) , "\n";
 
   while(<>)
     {
