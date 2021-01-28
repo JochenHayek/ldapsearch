@@ -40,20 +40,20 @@
 	}
       elsif(m/ ^ \s*$ /x)
 	{
-	  if( defined($record{sn}) || defined($record{givenName}) || defined($record{mail}) )
+	  if(    defined($record{l}) || defined($record{department}) || defined($record{sn}) || defined($record{givenName}) || defined($record{initials})
+	      || defined($record{mail}) || defined($record{telephoneNumber}) || defined($record{mobile}) || defined($record{title}) 
+	    )
 	    {
-	      # l,department,sn,givenName,mail,telephoneNumbertitle,title
-
-	      printf "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
-		defined($record{l})  	          ? $record{l}               : '' ,
-		defined($record{department}) 	  ? $record{department}      : '' ,
-		defined($record{sn})         	  ? $record{sn}              : '' ,
-		defined($record{givenName})  	  ? $record{givenName}       : '' ,
-		defined($record{initials})        ? $record{initials}        : '' ,
-		defined($record{mail})       	  ? $record{mail}            : '' ,
-		defined($record{telephoneNumber}) ? $record{telephoneNumber} : '' ,
-		defined($record{mobile})          ? $record{mobile}          : '' ,
-		defined($record{title})      	  ? $record{title}           : ''
+	      my($separator) = '';
+	      foreach my $field ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title')
+		{
+		  printf "%s\"%s\"",
+		    $separator,
+		    defined($record{$field}) ? $record{$field} : ''
+		    ;
+		  $separator = ',';
+		}
+	      print "\n"
 		;
 	    }
 
