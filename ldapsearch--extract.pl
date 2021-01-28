@@ -27,6 +27,11 @@
 
   my($show_original_records_p) = 0;
 
+  my(@field_names) = ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title');
+
+  # TBD:
+  # print field names now!
+
   while(<>)
     {
       if(m/ ^ (?<lhs>dn) : \s+/x)
@@ -44,7 +49,7 @@
 	  my($output_line) = '';
 	  my($separator) = '';
 
-	  foreach my $field ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title')
+	  foreach my $field (@field_names)
 	    {
 	      $any_of_them_is_defined_p ||= defined($record{$field});
 
