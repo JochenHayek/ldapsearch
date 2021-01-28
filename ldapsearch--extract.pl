@@ -44,17 +44,19 @@
 	      || defined($record{mail}) || defined($record{telephoneNumber}) || defined($record{mobile}) || defined($record{title}) 
 	    )
 	    {
+	      my($output_line) = '';
 	      my($separator) = '';
 	      foreach my $field ('l','department','sn','givenName','initials','mail','telephoneNumber','mobile','title')
 		{
-		  printf "%s\"%s\"",
-		    $separator,
-		    defined($record{$field}) ? $record{$field} : ''
-		    ;
+		  $output_line .=
+		    sprintf "%s\"%s\"",
+		      $separator,
+		      defined($record{$field}) ? $record{$field} : ''
+		      ;
 		  $separator = ',';
 		}
-	      print "\n"
-		;
+	      $output_line .= "\n";
+	      print $output_line;
 	    }
 
 	  print
