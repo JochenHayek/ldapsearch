@@ -21,6 +21,7 @@
   ,'sn'
   ,'givenName'
   ,'initials'
+  ,'sAMAccountName'
   ,'mail'
   ,'telephoneNumber'
   ,'mobile'
