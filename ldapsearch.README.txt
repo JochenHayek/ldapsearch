@@ -6,14 +6,21 @@
 
 * remember get-domain-accounts.pl ?!?
 
-* we are using "csvkit" -> https://csvkit.readthedocs.io
+================================================================================
+
+* we are using "csvkit"
+
+** https://csvkit.readthedocs.io
+** https://csvkit.readthedocs.io/en/latest/common_arguments.html
+** https://csvkit.readthedocs.io/en/latest/scripts/csvformat.html
+** https://csvkit.readthedocs.io/en/latest/scripts/csvsort.html
+** https://csvkit.readthedocs.io/en/latest/scripts/csvlook.html
 
 ================================================================================
 
-$ date=$( date '+%Y%m%d%H%M%S' )
 $ dir=$HOME/etc/addresses
 $ ldap_password=...
-$ env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ${dir}/ldap.${date}.txt
+$ date=$( date '+%Y%m%d%H%M%S' ) env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ${dir}/ldap.${date}.txt
 
 $ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ${dir}/ldap.${date}.txt | (echo 'l,department,sn,givenName,initials,mail,telephoneNumber,mobile,title' ; sort) > ${dir}/ldap.${date}.csv
 
