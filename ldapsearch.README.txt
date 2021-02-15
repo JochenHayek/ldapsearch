@@ -20,9 +20,26 @@
 
 $ dir=$HOME/etc/addresses
 $ ldap_password=...
-$ date=$( date '+%Y%m%d%H%M%S' ) env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh           > ${dir}/ldap.${date}.txt
+$ date=$( date '+%Y%m%d%H%M%S' ) env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh | tee ${dir}/ldap.${date}.txt | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | csvsort --blanks --quoting=1 | csvformat --out-quoting=2 > ${dir}/ldap.${date}.csv; xz -9 ${dir}/ldap.${date}.txt
+$ ~/bin/show-identical-files.sh ${dir}/ldap.*.csv
+$ ~/bin/diff_last_2.sh          ${dir}/ldap.*.csv
 
-$ ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl           ${dir}/ldap.${date}.txt | (echo 'l,department,sn,givenName,initials,mail,telephoneNumber,mobile,title' ; sort) > ${dir}/ldap.${date}.csv
+================================================================================
+
+# in case I do *not* *want* to *enquire* the LDAP server again,
+# but I only want to run …/ldapsearch--extract.pl again:
+
+##  | tee ${dir}/ldap.${date}.unsorted.csv
+
+# csvsort --blanks :
+#
+#   Do not coerce empty, "na", "n/a", "none", "null", "." strings to NULL values.
+#
+#   JH: NULL values are consired uncomparable, whereis the empty string does compare naturally.
+
+$ xz -cd ${dir}/ldap.${date}.txt.xz | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | csvsort --blanks --quoting=1 | csvformat --out-quoting=2 > ${dir}/ldap.${date}.csv
+$ ~/bin/show-identical-files.sh ${dir}/ldap.*.csv
+$ ~/bin/diff_last_2.sh          ${dir}/ldap.*.csv
 
 ================================================================================
 
@@ -33,6 +50,7 @@ $ csvcut --names ${dir}/ldap.${date}.csv
 ================================================================================
 
 # which departments do we have:
+$ csvcut --columns department ${dir}/ldap.${date}.csv | csvsort --columns department | uniq | csvlook
 $ csvcut --columns department ${dir}/ldap.${date}.csv | csvsort --columns department | uniq | csvlook | tee ${dir}/ldap.${date}.departments.csv
 …
 
