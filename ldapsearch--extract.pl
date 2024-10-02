@@ -5,6 +5,8 @@
   my(%record);
 
   my($show_original_records_p) = 0;
+##my($quotation_char) = '"';
+  my($quotation_char) = '';
 
   my(@field_names) = 
 
@@ -16,16 +18,20 @@
 ##,'streetAddress'
 ##,'st'
 
-  ('l'
-  ,'department'
+##,'l'
+##,'department'
+##,'givenName'
+##,'initials'
+##,'sAMAccountName'
+##,'telephoneNumber'
+##,'mobile'
+##,'title'
+
+  ('displayName'
+  ,'Herr_oder_Frau'
+  ,'cn'
   ,'sn'
-  ,'givenName'
-  ,'initials'
-  ,'sAMAccountName'
   ,'mail'
-  ,'telephoneNumber'
-  ,'mobile'
-  ,'title'
   );
 
   my(%positive_list);
@@ -51,18 +57,20 @@
 	{
 	  my($any_of_them_is_defined_p) = 0;
 	  my($output_line) = '';
-	  my($separator) = '';
+	  my($separator_char) = '';
 
 	  foreach my $field (@field_names)
 	    {
 	      $any_of_them_is_defined_p ||= defined($record{$field});
 
 	      $output_line .=
-		sprintf "%s\"%s\"",
-		  $separator,
-		  defined($record{$field}) ? $record{$field} : ''
+		sprintf "%s%s%s%s",
+		  $separator_char,
+		  $quotation_char,
+		  defined($record{$field}) ? $record{$field} : '',
+		  $quotation_char,
 		  ;
-	      $separator = ',';
+	      $separator_char = ',';
 	    }
 
 	  $output_line .= "\n";
