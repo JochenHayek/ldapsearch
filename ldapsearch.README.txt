@@ -18,18 +18,58 @@
 
 ================================================================================
 
+# @BWI :
+
+$ dir=$HOME/etc/addresses
+##$ ldap_password='...'
+$ ldap_password=$( sudo perl -ne "m/^ \s* 'password' \s* => \s* '(?<pw>[^']*)', \s* $/x && print $+{pw},\"\\n\"" /etc/gitlab/gitlab.rb | head -1 )
+
+# verbose:
+
+$ date=$( date '+%Y%m%d%H%M%S' ); env ldap_password="${ldap_password}" ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch.wrapper-BWI.sh | tee ${dir}/addresses.${date}.ldap.txt | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | sort -t, -k4 -k3 -k2 | tee ${dir}/addresses.${date}.csv
+
+# quiet and lean:
+
+$ date=$( date '+%Y%m%d%H%M%S' ); env ldap_password="${ldap_password}" ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch.wrapper-BWI.sh | tee ${dir}/addresses.${date}.ldap.txt | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | fgrep -v 'displayName,Herr_oder_Frau,cn,sn,mail' | perl ~/bin/DB_from_LDAP_clean_first_name.pl | perl ~/bin/HoF_first_name__replace.pl | perl -F, -a -ne '$F[4] =~ s/\s*$//; print "$F[0],________,$F[1],$F[2],$F[3],$F[4]\n"' | sort -f -t, -k5 -k4 -k3 > ${dir}/addresses.${date}.csv
+
+$ ~/bin/show-identical-files.sh ${dir}/addresses.*.csv
+$ ~/bin/diff_last_2.sh          ${dir}/addresses.*.csv
+
+$ ~/bin/show-identical-files.sh ${dir}/addresses.*.ldap.txt
+$ ~/bin/diff_last_2.sh          ${dir}/addresses.*.ldap.txt
+
+within emacs dired:
+
+	##JH: remove this line: displayName,Herr_oder_Frau,cn,sn,mail
+
+	perl ~/bin/DB_from_LDAP_clean_first_name.pl ? > `?`.proper_first_name.csv
+
+	perl ~/bin/HoF_first_name__replace.pl ? > `?`.gendered.csv
+
+	sort -t, -k4 -k3 -k2 ? > `?`.sorted.csv
+
+	perl ~/bin/rename -v -m 's/ \.csv\. /./gx'
+
+
+
+================================================================================
+
 $ dir=$HOME/etc/addresses
 $ ldap_password=...
-$ date=$( date '+%Y%m%d%H%M%S' ) env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh | tee ${dir}/ldap.${date}.txt | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | csvsort --blanks --quoting=1 | csvformat --out-quoting=2 > ${dir}/ldap.${date}.csv; xz -9 ${dir}/ldap.${date}.txt
-$ ~/bin/show-identical-files.sh ${dir}/ldap.*.csv
-$ ~/bin/diff_last_2.sh          ${dir}/ldap.*.csv
+$ date=$( date '+%Y%m%d%H%M%S' ); env ldap_password="${ldap_password}" ~/bin/ldapsearch.wrapper-___.sh | tee ${dir}/addresses.${date}.ldap.txt | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | csvsort --blanks --quoting=1 | csvformat --out-quoting=2 > ${dir}/addresses.${date}.csv; xz -9 ${dir}/addresses.${date}.ldap.txt
+
+$ ~/bin/show-identical-files.sh ${dir}/addresses.*.csv
+$ ~/bin/diff_last_2.sh          ${dir}/addresses.*.csv
+
+$ ~/bin/show-identical-files.sh ${dir}/addresses.*.ldap.txt
+$ ~/bin/diff_last_2.sh          ${dir}/addresses.*.ldap.txt
 
 ================================================================================
 
 # in case I do *not* *want* to *enquire* the LDAP server again,
 # but I only want to run …/ldapsearch--extract.pl again:
 
-##  | tee ${dir}/ldap.${date}.unsorted.csv
+##  | tee ${dir}/addresses.${date}.unsorted.csv
 
 # csvsort --blanks :
 #
@@ -37,30 +77,30 @@ $ ~/bin/diff_last_2.sh          ${dir}/ldap.*.csv
 #
 #   JH: NULL values are consired uncomparable, whereis the empty string does compare naturally.
 
-$ xz -cd ${dir}/ldap.${date}.txt.xz | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | csvsort --blanks --quoting=1 | csvformat --out-quoting=2 > ${dir}/ldap.${date}.csv
-$ ~/bin/show-identical-files.sh ${dir}/ldap.*.csv
-$ ~/bin/diff_last_2.sh          ${dir}/ldap.*.csv
+$ xz -cd ${dir}/addresses.${date}.ldap.txt.xz | ~/git-servers/github.com/JochenHayek/ldapsearch/ldapsearch--extract.pl | csvsort --blanks --quoting=1 | csvformat --out-quoting=2 > ${dir}/addresses.${date}.csv
+$ ~/bin/show-identical-files.sh ${dir}/addresses.*.csv
+$ ~/bin/diff_last_2.sh          ${dir}/addresses.*.csv
 
 ================================================================================
 
 # column names (should be as above):
 #
-$ csvcut --names ${dir}/ldap.${date}.csv
+$ csvcut --names ${dir}/addresses.${date}.csv
 
 ================================================================================
 
 # which departments do we have:
-$ csvcut --columns department ${dir}/ldap.${date}.csv | csvsort --columns department | uniq | csvlook
-$ csvcut --columns department ${dir}/ldap.${date}.csv | csvsort --columns department | uniq | csvlook | tee ${dir}/ldap.${date}.departments.csv
+$ csvcut --columns department ${dir}/addresses.${date}.csv | csvsort --columns department | uniq | csvlook
+$ csvcut --columns department ${dir}/addresses.${date}.csv | csvsort --columns department | uniq | csvlook | tee ${dir}/addresses.${date}.departments.csv
 …
 
 ================================================================================
 
 # only …:
-$ csvgrep --columns department --regex '(dept_A|dept_B|dept_C)' ${dir}/ldap.${date}.csv | tee ${dir}/ldap.${date}.entire_IT.csv
+$ csvgrep --columns department --regex '(dept_A|dept_B|dept_C)' ${dir}/addresses.${date}.csv | tee ${dir}/addresses.${date}.entire_IT.csv
 
 # only misspelt "dept_ZZZ":
-$ csvgrep --columns department --regex '(dept_ZZZ$)' ${dir}/ldap.${date}.csv | csvcut --columns sn,givenName,mail | csvlook | tee ${dir}/ldap.${date}.dept_ZZZ.csv
+$ csvgrep --columns department --regex '(dept_ZZZ$)' ${dir}/addresses.${date}.csv | csvcut --columns sn,givenName,mail | csvlook | tee ${dir}/addresses.${date}.dept_ZZZ.csv
 | sn    | givenName | mail                |
 | ----- | --------- | ------------------- |
 | Short | Julia     | j.short@federalx.eu |
